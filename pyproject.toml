@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "controllability-scorer"
+version = "0.1.0"
+description = "Score system vulnerability using channel controllability and defender observability decomposition"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Rex Coleman", email = "rex@singularitycyber.com"}]
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.24", "scipy>=1.10"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3",
+]
+
+[project.urls]
+Homepage = "https://github.com/rexcoleman/controllability-bound"
+Repository = "https://github.com/rexcoleman/controllability-bound"
+
+[project.scripts]
+controllability-scorer = "controllability_scorer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["controllability_scorer*"]
