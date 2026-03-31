@@ -1,7 +1,7 @@
 # Hypothesis Registry — Controllability Bound
 
 > **Lock status:** PRE-REGISTERED. Hypotheses below are immutable after lock_commit is set.
-> **Lock commit:** TO BE SET
+> **Lock commit: 8500cc9dc1b7f91a359e9a3bc9f4e167177816d0
 
 ---
 

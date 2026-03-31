@@ -52,7 +52,7 @@
 
 **Project:** Controllability Bound — Formalizing Defense Difficulty as a Function of Channel Controllability
 **Target venue:** arXiv preprint → AISec Workshop (ACM CCS) or SaTML (Tier 2)
-**Design lock commit:** TO BE SET
+**Design lock commit: 8500cc9dc1b7f91a359e9a3bc9f4e167177816d0
 **Design lock date:** 2026-03-31
 
 ---
