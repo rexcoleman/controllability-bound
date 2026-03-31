@@ -141,8 +141,24 @@
 | Significance test | Permutation test for R² difference (bound vs baselines) | Non-parametric; doesn't assume normal residuals |
 | Effect size threshold | R² improvement > 0.1 over best baseline | Meaningful predictive improvement |
 | CI method | Bootstrap 95% CI (10,000 resamples) | Standard for R² confidence intervals |
-| Multiple comparison correction | Bonferroni for 3 baseline comparisons | Conservative; 3 comparisons only |
-| Power analysis | With 4 domains × 5+ conditions each = 20+ data points for regression, power > 0.9 for detecting R² > 0.5 | Sufficient for the structural claim |
+| Multiple comparison correction | Bonferroni for 4 model comparisons (additive, multiplicative, interaction, single-feature) | Conservative; 4 comparisons |
+
+**Power analysis (Colonel Blotto sample size):**
+
+Target: detect R² > 0.5 at α=0.05, power=0.80.
+With 5 controllability levels × D variations, we need the regression to have sufficient data points per condition.
+Using Cohen's formula for R² in multiple regression: N ≥ (L / f²) + k + 1, where L is tabled value for power=0.80, f² = R²/(1-R²).
+For R²=0.5: f² = 1.0, k=2 predictors (C, D), L ≈ 10.9 → N ≥ 14.
+For R²=0.3: f² = 0.43, L ≈ 10.9 → N ≥ 28.
+Conservative: **N=50 game conditions** (5 C levels × 5 D levels × 2 game sizes = 50 unique conditions, each with 100 games for stable win-rate estimates = 5,000 total games). This gives power > 0.95 for detecting R² > 0.3, well above the 0.80 threshold.
+
+| Scenario | Min detectable R² | N conditions | Games per condition | Total games | Power |
+|---|---|---|---|---|---|
+| Conservative | 0.3 | 50 | 100 | 5,000 | >0.95 |
+| Moderate | 0.5 | 25 | 100 | 2,500 | >0.95 |
+| Minimum viable | 0.5 | 14 | 200 | 2,800 | 0.80 |
+
+**Decision:** Use conservative (5,000 games, 50 conditions). CPU cost is negligible (pure simulation, <1 minute).
 
 ---
 
@@ -325,6 +341,48 @@ All items must be checked before Phase 1 compute begins.
 | Additive decomposition holds | Channels are approximately independent (no strong interactions) | Test interaction terms in regression; if R² improvement < 0.05, independence holds |
 | Bound is tighter in some domains | Domain complexity affects slack | Measure residuals per domain; correlate with system dimensionality |
 
+### Operational Definitions of C and D (per domain, BEFORE fitting)
+
+> These definitions are locked before any model fitting. They derive from system architecture, not from attack outcomes. Changing these after seeing results would be p-hacking.
+
+**Definition rules (domain-agnostic):**
+- C(channel) = fraction of the channel's input space the attacker can set per interaction. Measured from the attacker's capability specification, not from observed outcomes.
+- D(channel) = fraction of the channel's state visible to the defender's monitoring system. Measured from the system architecture (what is logged, gated, or inspectable), not from defense effectiveness.
+
+**Domain 1: RL Agents (FP-12)**
+
+| Channel | C Definition | C Value | D Definition | D Value | Outcome Metric |
+|---|---|---|---|---|---|
+| Observation vector (Gaussian) | Attacker perturbs all features every timestep. C = epsilon (perturbation magnitude / observation range). | 0.01–0.20 | Defender has NO per-step observation monitoring. Internal inference state is opaque. | 0.0 | Policy divergence (%) |
+| Observation vector (targeted flip) | Attacker flips decision-relevant features only. C = N_targeted / N_total_features. | 0.40 (2/5 in tool_selection) | Same as above — no observation monitoring. | 0.0 | Policy divergence (%) |
+| Reward signal | Attacker corrupts fraction of training transitions. C = corruption_rate. | 0.01–0.20 | Reward signal is logged during training. Defender can inspect aggregate statistics. | 0.5 | Policy divergence (%) |
+
+**Domain 2: LLM Agents (FP-02)**
+
+| Channel | C Definition | C Value | D Definition | D Value | Outcome Metric |
+|---|---|---|---|---|---|
+| User prompt | Attacker fully controls input text. C = 1.0 (all tokens attacker-chosen). | 1.0 | Input is directly logged and parseable. Defender can filter before agent processes. | 1.0 | Attack success rate |
+| Tool parameters | Attacker specifies tool arguments via reasoning manipulation. C = 1.0 (full parameter control). | 1.0 | Tool calls are logged with intent validation. Defender sees call + arguments. | 0.8 | Attack success rate |
+| Reasoning chain | Attacker frames multi-step instructions that hijack agent's planning loop. C = 0.5 (indirect — attacker suggests, agent executes). | 0.5 | Internal reasoning state is NOT visible to defender. No monitoring of agent's chain-of-thought. | 0.0 | Attack success rate |
+| Conversation history | Attacker poisons prior messages. C = 0.7 (requires prior interaction window). | 0.7 | History is auditable but not monitored in real-time. | 0.6 | Attack success rate |
+| Tool outputs | Attacker controls external tool response. C = 0.5 (partial — depends on tool behavior). | 0.5 | Outputs are logged but semantic content is opaque to automated monitoring. | 0.5 | Attack success rate |
+
+**Domain 3: Multi-Agent Cascades (FP-15)**
+
+| Channel | C Definition | C Value | D Definition | D Value | Outcome Metric |
+|---|---|---|---|---|---|
+| Delegation (implicit trust) | Attacker controls poisoned task content. Every delegation accepted. C = 1.0. | 1.0 | No verification of delegated tasks. Defender has zero visibility into delegation decisions. | 0.0 | Poison rate |
+| Delegation (capability-scoped) | Attacker must craft outputs matching target capability. C = 0.7 (constrained but feasible). | 0.7 | Capability filter is logged and monitored. Defender sees capability match/mismatch. | 0.8 | Poison rate |
+| Delegation (zero-trust) | Attacker must pass verification gate. C = 1 - P_verify = 0.2 at P_verify=0.8. | 0.2 | Every delegation is verified and gated. Defender inspects each hop. | 1.0 | Poison rate |
+
+**Domain 4: Colonel Blotto Game (new — transfer test)**
+
+| Channel | C Definition | C Value | D Definition | D Value | Outcome Metric |
+|---|---|---|---|---|---|
+| Battlefield allocation | Fraction of total troops player can allocate freely. C = troops_available / max_troops. | 0.2–1.0 (5 levels) | Fraction of opponent's allocation visible before committing. D = observed_battlefields / total_battlefields. | 0.0–0.8 (varies) | Win rate |
+
+> Note: Colonel Blotto maps naturally because controllability = resource allocation freedom and observability = information about opponent. The game has known Nash equilibria for comparison.
+
 ### Formal Contribution Statement (draft)
 
 We contribute:
@@ -351,11 +409,16 @@ Then the expected attack success rate satisfies:
 
 **E[attack_success(S)] ≤ Σᵢ wᵢ · C(cᵢ) · (1 - D(cᵢ))**
 
-**Competing model (pre-registered per A5):**
+**Competing models (pre-registered per A5):**
 
-Multiplicative alternative: E[attack_success(S)] ≤ Πᵢ [C(cᵢ) · (1 - D(cᵢ))]^wᵢ
+Model 1 (Primary — Additive): `E[attack_success(S)] ≤ Σᵢ wᵢ · C(cᵢ) · (1 - D(cᵢ))`
+Model 2 (Multiplicative): `E[attack_success(S)] ≤ Πᵢ [C(cᵢ) · (1 - D(cᵢ))]^wᵢ`
+Model 3 (Additive + Interactions): `E[attack_success(S)] ≤ Σᵢ wᵢ · C(cᵢ) · (1 - D(cᵢ)) + Σᵢ<ⱼ γᵢⱼ · C(cᵢ) · C(cⱼ)`
 
-Prediction: additive model R² > multiplicative R² in ≥3 of 4 domains.
+Predictions:
+- Model 1 R² > Model 2 R² in ≥3 of 4 domains (cascade-benchmark evidence: 0.992 vs -0.06).
+- Model 3 R² > Model 1 R² by >0.05 in domains with structurally dependent channels (multi-agent cascades), but NOT in domains with independent channels (RL agents).
+- If Model 3 R² ≈ Model 1 R² everywhere (improvement <0.01), channel independence is justified and the simple bound is sufficient. This is a positive finding.
 
 ### Threats to Validity
 

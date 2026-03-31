@@ -53,6 +53,18 @@
 
 ---
 
+## H-5a: Interaction Model Reveals Channel Dependencies
+
+**Statement:** An additive + pairwise interaction model `E[attack] = Σ wᵢ·C(cᵢ)·(1-D(cᵢ)) + Σ γᵢⱼ·C(cᵢ)·C(cⱼ)` achieves R² improvement > 0.05 over the pure additive model in at least 1 of 4 tested domains.
+
+**Prediction:** Interaction terms are significant in multi-agent cascades (channels are structurally dependent — compromising one agent exposes the next) but NOT in RL agents (observation and reward channels are independent).
+
+**Surprise criteria:** Interaction terms significant in ALL domains (channels are never independent — the simple bound is always an approximation). OR interaction terms significant in ZERO domains (channels are always independent — the simple bound is exact).
+
+**Falsification:** If interaction R² improvement < 0.01 in all domains, channel independence is a safe assumption and the simple additive bound is sufficient. Report this as a positive finding (simpler model justified).
+
+---
+
 ## H-5: Bound Tightness Is Informative
 
 **Statement:** The mean tightness ratio (predicted / observed attack success) is between 1.0 and 3.0 across all domains, making the bound practically useful (not trivially loose).
