@@ -357,6 +357,15 @@ Multiplicative alternative: E[attack_success(S)] ≤ Πᵢ [C(cᵢ) · (1 - D(c�
 
 Prediction: additive model R² > multiplicative R² in ≥3 of 4 domains.
 
+### Threats to Validity
+
+| Threat | Type | Mitigation |
+|---|---|---|
+| Self-selected portfolio data — projects were designed by the same researcher | Internal (selection bias) | Game-theoretic transfer test uses independently-designed domain. Report where bound is LOOSE, not just where it fits. |
+| Controllability and observability operationalization may be subjective | Construct | Provide operational definitions based on system architecture (countable, not rated). Report inter-rater reliability if feasible. |
+| Small number of domains (4) for a "general" claim | External (generalizability) | State clearly: bound validated in 4 domains. Generality beyond these is [PROJECTED], not [DEMONSTRATED]. |
+| Game-theoretic domain may be too simple | External (ecological validity) | Use Colonel Blotto with 5+ battlefields and mixed strategies. Compare against known Nash equilibria. |
+
 ### Depth Escalation Checklist
 
 | # | Requirement | Status |
