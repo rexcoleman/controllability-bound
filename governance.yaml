@@ -1,5 +1,6 @@
 profile: contract-track
-quality_target: "7.0+"
+quality_target: "8.0+"
+target_venue: arxiv_preprint
 venue_target: "arXiv preprint → Workshop (AISec, SaTML)"
 venue_tier: "Tier 2"
 created: "2026-03-31"
