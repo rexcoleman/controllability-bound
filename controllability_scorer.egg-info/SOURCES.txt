@@ -1,3 +1,4 @@
+LICENSE
 README.md
 pyproject.toml
 controllability_scorer/__init__.py
