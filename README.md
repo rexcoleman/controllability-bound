@@ -1,6 +1,6 @@
-# Defense Difficulty Decomposes Additively — Controllability and Observability Are Independent, Not Multiplicative
+# Adversarial Control Analysis: Defense Difficulty Decomposes Additively Into Controllability and Observability
 
-**Attacker controllability (C) and defender observability (D) predict attack success independently (R²=0.76-0.93), not as the intuitive product C·(1-D) (R²=0.34). Security systems are observability-limited; game-theoretic systems are controllability-limited.**
+**Attacker controllability (C) and defender observability (D) predict attack success independently (R²=0.76-0.93), not as the intuitive product C·(1-D) (R²=0.34). Security systems are observability-limited; game-theoretic systems are controllability-limited. A quantitative framework for scoring agent attack surfaces across AI security domains.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-green.svg)](https://www.python.org/downloads/)
