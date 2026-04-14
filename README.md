@@ -61,7 +61,13 @@ Pre-registered 6 hypotheses across 3 competing models (additive product, multipl
 3. **Multi-agent cascades**: trust model comparison across implicit, capability-scoped, and zero-trust, 9 data points
 4. **Colonel Blotto games** (transfer test): 50 conditions, 25,000 games, 5 seeds
 
-Read the full methodology at [rexcoleman.dev](https://rexcoleman.dev). Experimental design in [EXPERIMENTAL_DESIGN.md](EXPERIMENTAL_DESIGN.md). Full results in [FINDINGS.md](FINDINGS.md).
+Read the full methodology on the blog: [Adversarial Control Analysis](https://rexcoleman.dev/posts/adversarial-control-analysis/), [Architecture-Level Defense](https://rexcoleman.dev/posts/architecture-level-defense/), [Tutorial: ACA in Three Steps](https://rexcoleman.dev/posts/tutorial-aca-three-steps/). Experimental design in [EXPERIMENTAL_DESIGN.md](EXPERIMENTAL_DESIGN.md). Full results in [FINDINGS.md](FINDINGS.md).
+
+## Related Work
+
+- [agent-semantic-resistance](https://github.com/rexcoleman/agent-semantic-resistance) — Semantic privilege escalation in LLM agents
+- [multi-agent-security](https://github.com/rexcoleman/multi-agent-security) — Cascade attacks in multi-agent systems
+- [verified-delegation-protocol](https://github.com/rexcoleman/verified-delegation-protocol) — Trust boundaries for agent delegation
 
 ## Figures
 
